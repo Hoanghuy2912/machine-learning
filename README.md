@@ -248,3 +248,4 @@ Dự án được phát hành dưới MIT License - xem file [LICENSE](LICENSE) 
 ---
 *Dự án này nhằm đóng góp vào việc quản lý bền vững tài nguyên đất đai và ứng phó với biến đổi khí hậu tại vùng Đồng bằng sông Cửu Long.*
 "# machine-learning" 
+"# machine-learning" 
