@@ -1,0 +1,142 @@
+# Cấu hình dự án phân tích biến động sử dụng đất tỉnh Đồng Tháp
+
+# Thông tin khu vực nghiên cứu
+study_area:
+  name: "Đồng Tháp Province"
+  boundary_shapefile: "data/reference/dong_thap_boundary.shp"
+  # Tọa độ WGS84 của tỉnh Đồng Tháp (xấp xỉ)
+  bounds:
+    north: 11.2
+    south: 10.3
+    east: 105.8
+    west: 105.1
+  crs: "EPSG:4326"
+
+# Cấu hình thời gian phân tích
+time_periods:
+  start_year: 1990
+  end_year: 2025
+  analysis_years: [1990, 2000, 2010, 2020, 2025]
+  # Tùy chọn mở rộng cho tương lai
+  extended_years: [2030, 2035, 2040]
+  # Khoảng cách tối thiểu giữa các năm phân tích
+  min_year_gap: 5
+  
+# Cấu hình dữ liệu ảnh viễn thám
+satellite_data:
+  landsat:
+    collections:
+      - "LANDSAT/LT05/C02/T1_L2"  # Landsat 5 TM (1984-2013)
+      - "LANDSAT/LE07/C02/T1_L2"  # Landsat 7 ETM+ (1999-present)
+      - "LANDSAT/LC08/C02/T1_L2"  # Landsat 8 OLI (2013-present)
+    resolution: 30  # meters
+    cloud_cover_threshold: 20  # percent
+    
+  sentinel2:
+    collection: "COPERNICUS/S2_SR_HARMONIZED"
+    resolution: 10  # meters
+    cloud_cover_threshold: 20  # percent
+    start_date: "2015-01-01"
+
+# Cấu hình các lớp phủ đất cần phân loại
+land_cover_classes:
+  agricultural: 
+    id: 1
+    name: "Đất nông nghiệp"
+    color: "#90EE90"
+  urban:
+    id: 2
+    name: "Đất đô thị"
+    color: "#FF6B6B"
+  forest:
+    id: 3
+    name: "Rừng"
+    color: "#228B22"
+  water:
+    id: 4
+    name: "Mặt nước"
+    color: "#1E90FF"
+  bare_land:
+    id: 5
+    name: "Đất trống"
+    color: "#DEB887"
+
+# Cấu hình các chỉ số phổ
+spectral_indices:
+  ndvi:
+    name: "Normalized Difference Vegetation Index"
+    formula: "(NIR - RED) / (NIR + RED)"
+  mndwi:
+    name: "Modified Normalized Difference Water Index"
+    formula: "(GREEN - SWIR1) / (GREEN + SWIR1)"
+  ndbi:
+    name: "Normalized Difference Built-up Index"
+    formula: "(SWIR1 - NIR) / (SWIR1 + NIR)"
+  evi:
+    name: "Enhanced Vegetation Index"
+    formula: "2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))"
+
+# Cấu hình mô hình Machine Learning
+machine_learning:
+  random_forest:
+    n_estimators: 100
+    max_depth: 20
+    min_samples_split: 5
+    min_samples_leaf: 2
+    random_state: 42
+    
+  svm:
+    kernel: "rbf"
+    C: 1.0
+    gamma: "scale"
+    random_state: 42
+    
+  cnn:
+    input_shape: [64, 64, 6]  # width, height, bands
+    epochs: 100
+    batch_size: 32
+    learning_rate: 0.001
+    validation_split: 0.2
+
+# Cấu hình đánh giá mô hình
+model_evaluation:
+  test_size: 0.3
+  cross_validation_folds: 5
+  metrics: ["accuracy", "precision", "recall", "f1", "kappa"]
+  min_accuracy_threshold: 0.85
+
+# Cấu hình phân tích biến động
+change_analysis:
+  change_periods:
+    - ["1990", "2000"]
+    - ["2000", "2010"] 
+    - ["2010", "2020"]
+    - ["2020", "2025"]
+  minimum_mapping_unit: 0.5  # hectares
+  
+# Cấu hình đầu ra
+output:
+  maps:
+    format: ["tiff", "png"]
+    dpi: 300
+    projection: "EPSG:3405"  # VN-2000 Zone 6
+  
+  reports:
+    format: ["pdf", "html"]
+    language: "vietnamese"
+    
+  statistics:
+    format: ["csv", "excel"]
+
+# Cấu hình xử lý song song
+processing:
+  n_cores: 4
+  chunk_size: 1000
+  memory_limit: "8GB"
+
+# Đường dẫn thư mục
+paths:
+  data_dir: "data"
+  output_dir: "outputs"
+  temp_dir: "temp"
+  log_dir: "logs"

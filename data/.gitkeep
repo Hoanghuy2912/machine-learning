@@ -1,0 +1,4 @@
+# Thư mục chứa dữ liệu
+# raw/ - Dữ liệu thô từ Landsat, Sentinel-2
+# processed/ - Dữ liệu đã qua xử lý
+# reference/ - Dữ liệu tham chiếu, ground truth
